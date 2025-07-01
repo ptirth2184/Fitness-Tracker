@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link as LinkR, NavLink } from "react-router-dom";
 import LogoImg from '../utils/images/Logo.png'
+import { MenuRounded } from "@mui/icons-material";
+import { Avatar } from "@mui/material";
+import { useDispatch } from "react-redux";
+// import { logout } from "../redux/reducers/userSlice";
 
 
 const Nav = styled.div`
@@ -41,16 +45,121 @@ const NavLogo = styled(LinkR)`
 const Logo = styled.img`
     height: 42px;
 `
+const Mobileicon = styled.div`
+    color: ${({ theme }) => theme.text_primary};
+    display: none;
+    @media screen and (max-width: 768px)
+    {
+        display: flex;
+        align-items: center;
+    }
+`
+const NavItems = styled.ul`
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 0px 6px;
+    @media screen and (max-width: 768px)
+    {
+        display: none;
+    }
+`
+const Navlink = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  color: ${({ theme }) => theme.text_primary};
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
 
+  &:hover {
+    color: ${({ theme }) => theme.primary};
+  }
 
+  &.active {
+    color: ${({ theme }) => theme.primary};
+    border-bottom: 1.8px solid ${({ theme }) => theme.primary};
+  }
+`;
+
+const UserContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    align-items: center;
+    padding: 0 6px;
+
+`
+const TextButton = styled.div`
+    text-align: end;
+    color: ${({ theme }) => theme.secondary};
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    &:hover
+    {
+        color: ${({ theme }) =>theme.primary}
+    }
+`
+
+const MobileMenu = styled.ul`
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 16px;
+    padding: 0 6px;
+    list-style: none;
+    width: 80%;
+    padding: 12px 40px 24px 40px;
+    background: ${({ theme }) => theme.bg};
+    position: absolute;
+    top: 80%;
+    right: 0;
+    transition: all 0.6s ease-in-out;
+    transform: ${({ isOpen }) =>
+    isOpen ? "translateY(0)" : "translateY(-100%)"};
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    opacity: ${({ isOpen }) => (isOpen ? "100%" : "0")};
+    z-index: ${({ isOpen }) => (isOpen ? "1000" : "-1000")};
+`
 
 const Navbar =() =>{
-    return(<Nav>
+    const [isOpen, setisOpen] = useState(false);
+    return(
+    <Nav>
         <NavContainer>
+            <Mobileicon onClick={() => setisOpen(!isOpen)}>
+                <MenuRounded />
+            </Mobileicon>
             <NavLogo to='/'>
                 <Logo src={LogoImg}/>
                 FitTrack
             </NavLogo>
+            <MobileMenu isOpen={isOpen}>
+                <Navlink to='/'>Dashboard</Navlink>
+                <Navlink to='/workouts'>Workouts</Navlink>
+                <Navlink to='/tutorials'>Tutorials</Navlink>
+                <Navlink to='/blogs'>Blogs</Navlink>
+                <Navlink to='/contact'>Contact</Navlink>
+            </MobileMenu>
+            <NavItems>
+                <Navlink to='/'>Dashboard</Navlink>
+                <Navlink to='/workouts'>Workouts</Navlink>
+                <Navlink to='/tutorials'>Tutorials</Navlink>
+                <Navlink to='/blogs'>Blogs</Navlink>
+                <Navlink to='/contact'>Contact</Navlink>
+            </NavItems>
+            <UserContainer>
+                <Avatar />
+                <TextButton>Logout</TextButton>
+            </UserContainer>
         </NavContainer>
     </Nav>)
 }
