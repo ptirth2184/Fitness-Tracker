@@ -1,34 +1,26 @@
-import express from "express";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
-import cors from "cors";
-import authRoutes from "./routes/authRoutes.js";
-import protectedRoutes from "./routes/protectedRoutes.js";
-import workoutRoutes from "./routes/workoutRoutes.js";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 
+import workoutRoutes from './routes/workoutRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
-
-const app = express(); // ✅ must come BEFORE app.use()
-
-app.use("/api/workouts", workoutRoutes);
-app.use("/api/protected", protectedRoutes);
 dotenv.config();
 
+const app = express();
 
-app.use(cors());
+// ✅ Body Parser Middleware
 app.use(express.json());
+app.use(cors());
 
-// ✅ Use routes AFTER defining `app`
+app.use("/api/workouts", workoutRoutes);
 app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`✅ Server running at http://localhost:${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
   })
-  .catch((err) => {
-    console.log("❌ MongoDB connection failed:", err.message);
-  });
+  .catch((err) => console.log("❌ MongoDB Connection Error:", err));
