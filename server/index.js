@@ -3,9 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
-import workoutRoutes from './routes/workoutRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import workoutRoutes from './routes/workoutRoutes.js';
 import mealRoutes from './routes/mealRoutes.js';
+
+
 
 dotenv.config();
 
