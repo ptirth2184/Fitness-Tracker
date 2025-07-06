@@ -1,18 +1,41 @@
 // src/pages/Register.jsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    // TODO: send POST request to backend /api/auth/register
-    console.log(formData);
-  };
+  e.preventDefault();
+
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Registration successful!");
+      navigate("/login"); // ✅ Redirects user
+    } else {
+      alert(data.message || "Registration failed");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong!");
+  }
+};
+
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
@@ -47,6 +70,16 @@ const Register = () => {
         <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
           Register
         </button>
+
+        <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+          Already have an account?{" "}
+          <span
+            className="text-blue-500 hover:underline cursor-pointer"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </span>
+        </p>
       </form>
     </div>
   );

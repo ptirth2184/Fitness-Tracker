@@ -9,24 +9,29 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
+  try {
     const res = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await res.json();
+    const data = await res.json(); // Only once
 
     if (res.ok) {
-      const data = await response.json();
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
     } else {
       alert(data.message || "Login failed");
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Something went wrong!");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
